@@ -12,6 +12,7 @@ defmodule TradeWeb.HouseController do
   end
 
   def create(conn, %{"house" => house_params}) do
+    IO.inspect(house_params)
     with {:ok, %House{} = house} <- PrimitiveShop.create_house(house_params) do
       conn
       |> put_status(:created)

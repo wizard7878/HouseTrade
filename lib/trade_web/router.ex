@@ -12,10 +12,18 @@ defmodule TradeWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
 
-    resources "/houses", HouseController, except: [:new, :edit] # عرضه های اولیه موجود
-    
   end
 
+  scope "api/" , TradeWeb do
+    pipe_through :api
+
+    post "/users/create" , UserController , :createUser
+    post "/users/login" , UserController , :login
+
+    #get "/users" , UserController , :stockUsers # دارایی های کاربران
+    resources "/houses", HouseController, except: [:new, :edit] # عرضه های اولیه موجود
+
+  end
   scope "/", TradeWeb do
     pipe_through :browser
 
