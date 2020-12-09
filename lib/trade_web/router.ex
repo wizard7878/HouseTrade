@@ -11,6 +11,9 @@ defmodule TradeWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+
+    resources "/houses", HouseController, except: [:new, :edit] # عرضه های اولیه موجود
+    
   end
 
   scope "/", TradeWeb do
