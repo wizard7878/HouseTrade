@@ -67,4 +67,65 @@ defmodule Trade.PrimitiveShopTest do
       assert %Ecto.Changeset{} = PrimitiveShop.change_house(house)
     end
   end
+
+  describe "porders" do
+    alias Trade.PrimitiveShop.PrimitiveOrder
+
+    @valid_attrs %{number_share: 42, type_order: "some type_order"}
+    @update_attrs %{number_share: 43, type_order: "some updated type_order"}
+    @invalid_attrs %{number_share: nil, type_order: nil}
+
+    def primitive_order_fixture(attrs \\ %{}) do
+      {:ok, primitive_order} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> PrimitiveShop.create_primitive_order()
+
+      primitive_order
+    end
+
+    test "list_porders/0 returns all porders" do
+      primitive_order = primitive_order_fixture()
+      assert PrimitiveShop.list_porders() == [primitive_order]
+    end
+
+    test "get_primitive_order!/1 returns the primitive_order with given id" do
+      primitive_order = primitive_order_fixture()
+      assert PrimitiveShop.get_primitive_order!(primitive_order.id) == primitive_order
+    end
+
+    test "create_primitive_order/1 with valid data creates a primitive_order" do
+      assert {:ok, %PrimitiveOrder{} = primitive_order} = PrimitiveShop.create_primitive_order(@valid_attrs)
+      assert primitive_order.number_share == 42
+      assert primitive_order.type_order == "some type_order"
+    end
+
+    test "create_primitive_order/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = PrimitiveShop.create_primitive_order(@invalid_attrs)
+    end
+
+    test "update_primitive_order/2 with valid data updates the primitive_order" do
+      primitive_order = primitive_order_fixture()
+      assert {:ok, %PrimitiveOrder{} = primitive_order} = PrimitiveShop.update_primitive_order(primitive_order, @update_attrs)
+      assert primitive_order.number_share == 43
+      assert primitive_order.type_order == "some updated type_order"
+    end
+
+    test "update_primitive_order/2 with invalid data returns error changeset" do
+      primitive_order = primitive_order_fixture()
+      assert {:error, %Ecto.Changeset{}} = PrimitiveShop.update_primitive_order(primitive_order, @invalid_attrs)
+      assert primitive_order == PrimitiveShop.get_primitive_order!(primitive_order.id)
+    end
+
+    test "delete_primitive_order/1 deletes the primitive_order" do
+      primitive_order = primitive_order_fixture()
+      assert {:ok, %PrimitiveOrder{}} = PrimitiveShop.delete_primitive_order(primitive_order)
+      assert_raise Ecto.NoResultsError, fn -> PrimitiveShop.get_primitive_order!(primitive_order.id) end
+    end
+
+    test "change_primitive_order/1 returns a primitive_order changeset" do
+      primitive_order = primitive_order_fixture()
+      assert %Ecto.Changeset{} = PrimitiveShop.change_primitive_order(primitive_order)
+    end
+  end
 end

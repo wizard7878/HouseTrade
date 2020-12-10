@@ -26,6 +26,7 @@ defmodule TradeWeb.Router do
 
 
     #get "/users" , UserController , :stockUsers # دارایی های کاربران
+    resources "/porders", PrimitiveOrderController, except: [:new, :edit]  # پیشنهاد خرید عرضه اولیه
     resources "/houses", HouseController, except: [:new, :edit] # عرضه های اولیه موجود
 
   end

@@ -101,4 +101,100 @@ defmodule Trade.PrimitiveShop do
   def change_house(%House{} = house, attrs \\ %{}) do
     House.changeset(house, attrs)
   end
+
+  alias Trade.PrimitiveShop.PrimitiveOrder
+
+  @doc """
+  Returns the list of porders.
+
+  ## Examples
+
+      iex> list_porders()
+      [%PrimitiveOrder{}, ...]
+
+  """
+  def list_porders do
+    Repo.all(PrimitiveOrder)
+  end
+
+  @doc """
+  Gets a single primitive_order.
+
+  Raises `Ecto.NoResultsError` if the Primitive order does not exist.
+
+  ## Examples
+
+      iex> get_primitive_order!(123)
+      %PrimitiveOrder{}
+
+      iex> get_primitive_order!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_primitive_order!(id), do: Repo.get!(PrimitiveOrder, id)
+
+  @doc """
+  Creates a primitive_order.
+
+  ## Examples
+
+      iex> create_primitive_order(%{field: value})
+      {:ok, %PrimitiveOrder{}}
+
+      iex> create_primitive_order(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_primitive_order(attrs \\ %{}) do
+    %PrimitiveOrder{}
+    |> PrimitiveOrder.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a primitive_order.
+
+  ## Examples
+
+      iex> update_primitive_order(primitive_order, %{field: new_value})
+      {:ok, %PrimitiveOrder{}}
+
+      iex> update_primitive_order(primitive_order, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_primitive_order(%PrimitiveOrder{} = primitive_order, attrs) do
+    primitive_order
+    |> PrimitiveOrder.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a primitive_order.
+
+  ## Examples
+
+      iex> delete_primitive_order(primitive_order)
+      {:ok, %PrimitiveOrder{}}
+
+      iex> delete_primitive_order(primitive_order)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_primitive_order(%PrimitiveOrder{} = primitive_order) do
+    Repo.delete(primitive_order)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking primitive_order changes.
+
+  ## Examples
+
+      iex> change_primitive_order(primitive_order)
+      %Ecto.Changeset{data: %PrimitiveOrder{}}
+
+  """
+  def change_primitive_order(%PrimitiveOrder{} = primitive_order, attrs \\ %{}) do
+    PrimitiveOrder.changeset(primitive_order, attrs)
+  end
 end

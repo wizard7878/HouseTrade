@@ -7,7 +7,8 @@ defmodule Trade.PrimitiveShop.House do
     field :name, :string
     field :number_shares, :integer
     field :ordered_shares, :integer
-
+    has_many :porders , Trade.PrimitiveShop.PrimitiveOrder
+    
     timestamps()
   end
 

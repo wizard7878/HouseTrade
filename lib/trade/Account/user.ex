@@ -6,6 +6,7 @@ defmodule Trade.UserAccount.User do
     field :fname , :string
     field :lname , :string
     has_one :credentials , Trade.UserAccount.Credentials
+    has_many :porders , Trade.PrimitiveShop.PrimitiveOrder
     timestamps()
   end
 
