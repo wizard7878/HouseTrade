@@ -3,7 +3,7 @@ defmodule TradeWeb.HouseController do
 
   alias Trade.PrimitiveShop
   alias Trade.PrimitiveShop.House
-
+  alias Trade.Repo
   action_fallback TradeWeb.FallbackController
 
   def index(conn, _params) do

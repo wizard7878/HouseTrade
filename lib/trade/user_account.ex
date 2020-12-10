@@ -25,33 +25,33 @@ defmodule Trade.UserAccount do
     end
   end
 
-  def list_credentials do
-    Repo.all(User)
-  end
+  # def list_credentials do
+  #   Repo.all(User)
+  # end
 
-  def get_user!(id), do: Repo.get!(User, id)
-
-
-  def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
-  end
+  # def get_user!(id), do: Repo.get!(User, id)
 
 
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
-  end
+  # def create_user(attrs \\ %{}) do
+  #   %User{}
+  #   |> User.changeset(attrs)
+  #   |> Repo.insert()
+  # end
 
 
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
-  end
+  # def update_user(%User{} = user, attrs) do
+  #   user
+  #   |> User.changeset(attrs)
+  #   |> Repo.update()
+  # end
 
 
-  def change_user(%User{} = user, attrs \\ %{}) do
-    User.changeset(user, attrs)
-  end
+  # def delete_user(%User{} = user) do
+  #   Repo.delete(user)
+  # end
+
+
+  # def change_user(%User{} = user, attrs \\ %{}) do
+  #   User.changeset(user, attrs)
+  # end
 end

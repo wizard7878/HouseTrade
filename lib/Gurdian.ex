@@ -1,6 +1,6 @@
 defmodule Trade.Guardian do
   use Guardian, otp_app: :trade
-  alias Trade.Accounts.Credential
+  alias Trade.UserAccount.Credential
   def subject_for_token(user, _claims) do
     # You can use any value for the subject of your token but
     # it should be useful in retrieving the resource later, see

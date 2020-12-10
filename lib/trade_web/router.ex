@@ -1,5 +1,6 @@
 defmodule TradeWeb.Router do
   use TradeWeb, :router
+  alias Trade.Guardian
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -7,6 +8,7 @@ defmodule TradeWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+
   end
 
   pipeline :api do
@@ -14,26 +16,26 @@ defmodule TradeWeb.Router do
 
   end
 
-  scope "api/" , TradeWeb do
-    pipe_through :api
+  pipeline :jwt_authenticated do
+    plug Guardian.AuthPipeline
+  end
 
-    post "/users/create" , UserController , :createUser
-    post "/users/login" , UserController , :login
+  scope "api/" , TradeWeb do
+    pipe_through [:api,:jwt_authenticated]
+
+
 
     #get "/users" , UserController , :stockUsers # دارایی های کاربران
     resources "/houses", HouseController, except: [:new, :edit] # عرضه های اولیه موجود
 
   end
-  scope "/", TradeWeb do
-    pipe_through :browser
 
-    get "/", PageController, :index
+  scope "/auth", TradeWeb do
+    pipe_through :api
+
+    post "/users/create" , UserController , :createUser
+    post "/users/login" , UserController , :login
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", TradeWeb do
-  #   pipe_through :api
-  # end
 
   # Enables LiveDashboard only for development
   #
