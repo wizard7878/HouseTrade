@@ -13,20 +13,18 @@ defmodule TradeWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-
   end
 
   pipeline :jwt_authenticated do
     plug Guardian.AuthPipeline
+    plug :put_user_token
   end
 
-  scope "api/" , TradeWeb do
-    pipe_through [:api,:jwt_authenticated]
+  scope "/api" , TradeWeb do
+    pipe_through [:api, :jwt_authenticated]
 
-
-
-    #get "/users" , UserController , :stockUsers # دارایی های کاربران
-    resources "/porders", PrimitiveOrderController, except: [:new, :edit]  # پیشنهاد خرید عرضه اولیه
+    resources "/sorder", SecondaryOrderController, except: [:new, :edit] # پیشنهاد خرید و فروش (بازار ثانویه)
+    resources "/porders", PrimitiveOrderController, except: [:new, :edit,:update]  # پیشنهاد خرید عرضه اولیه
     resources "/houses", HouseController, except: [:new, :edit] # عرضه های اولیه موجود
 
   end
@@ -36,6 +34,12 @@ defmodule TradeWeb.Router do
 
     post "/users/create" , UserController , :createUser
     post "/users/login" , UserController , :login
+  end
+
+  scope "/", TradeWeb do
+    pipe_through :browser
+
+    get "/", PageController, :index
   end
 
   # Enables LiveDashboard only for development
@@ -51,6 +55,16 @@ defmodule TradeWeb.Router do
     scope "/" do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: TradeWeb.Telemetry
+    end
+  end
+
+
+  defp put_user_token(conn, _) do
+    if current_user = conn.private[:guardian_default_resource] do
+      token = Phoenix.Token.sign(conn, "key", current_user.id)
+      assign(conn, :user_token, token)
+    else
+      conn
     end
   end
 end

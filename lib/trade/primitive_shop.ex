@@ -1,199 +1,94 @@
 defmodule Trade.PrimitiveShop do
-  @moduledoc """
-  The PrimitiveShop context.
-  """
-
+  
   import Ecto.Query, warn: false
   alias Trade.Repo
 
   alias Trade.PrimitiveShop.House
 
-  @doc """
-  Returns the list of houses.
 
-  ## Examples
-
-      iex> list_houses()
-      [%House{}, ...]
-
-  """
   def list_houses do
     Repo.all(House)
   end
 
-  @doc """
-  Gets a single house.
 
-  Raises `Ecto.NoResultsError` if the House does not exist.
-
-  ## Examples
-
-      iex> get_house!(123)
-      %House{}
-
-      iex> get_house!(456)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_house!(id), do: Repo.get!(House, id)
 
-  @doc """
-  Creates a house.
 
-  ## Examples
-
-      iex> create_house(%{field: value})
-      {:ok, %House{}}
-
-      iex> create_house(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_house(attrs \\ %{}) do
     %House{}
     |> House.changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a house.
 
-  ## Examples
-
-      iex> update_house(house, %{field: new_value})
-      {:ok, %House{}}
-
-      iex> update_house(house, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_house(%House{} = house, attrs) do
     house
     |> House.changeset(attrs)
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a house.
 
-  ## Examples
-
-      iex> delete_house(house)
-      {:ok, %House{}}
-
-      iex> delete_house(house)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_house(%House{} = house) do
     Repo.delete(house)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking house changes.
 
-  ## Examples
-
-      iex> change_house(house)
-      %Ecto.Changeset{data: %House{}}
-
-  """
   def change_house(%House{} = house, attrs \\ %{}) do
     House.changeset(house, attrs)
   end
 
   alias Trade.PrimitiveShop.PrimitiveOrder
 
-  @doc """
-  Returns the list of porders.
 
-  ## Examples
-
-      iex> list_porders()
-      [%PrimitiveOrder{}, ...]
-
-  """
   def list_porders do
-    Repo.all(PrimitiveOrder)
+    PrimitiveOrder
+    |> Repo.all()
+    |> Repo.preload(credential: :user)
+    |> Repo.preload(:house)
   end
 
-  @doc """
-  Gets a single primitive_order.
 
-  Raises `Ecto.NoResultsError` if the Primitive order does not exist.
+  def get_primitive_order!(id) do
+    PrimitiveOrder
+    |> Repo.get!(id)
+    |> Repo.preload(credential: :user)
+    |> Repo.preload(:house)
 
-  ## Examples
+  end
 
-      iex> get_primitive_order!(123)
+
+
+  def create_primitive_order(attrs \\ %{},user) do
+    house = Repo.get(House,attrs["house_id"])
+    if house.number_shares >= attrs["number_share"] do
       %PrimitiveOrder{}
+      |> PrimitiveOrder.changeset(attrs)
+      |> Ecto.Changeset.put_change(:house_id,house.id)
+      |> Ecto.Changeset.put_change(:credential_id,user.id)
+      |> Repo.insert()
+    else
+      nil
+    end
 
-      iex> get_primitive_order!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_primitive_order!(id), do: Repo.get!(PrimitiveOrder, id)
-
-  @doc """
-  Creates a primitive_order.
-
-  ## Examples
-
-      iex> create_primitive_order(%{field: value})
-      {:ok, %PrimitiveOrder{}}
-
-      iex> create_primitive_order(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_primitive_order(attrs \\ %{}) do
-    %PrimitiveOrder{}
-    |> PrimitiveOrder.changeset(attrs)
-    |> Repo.insert()
   end
 
-  @doc """
-  Updates a primitive_order.
-
-  ## Examples
-
-      iex> update_primitive_order(primitive_order, %{field: new_value})
-      {:ok, %PrimitiveOrder{}}
-
-      iex> update_primitive_order(primitive_order, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_primitive_order(%PrimitiveOrder{} = primitive_order, attrs) do
-    primitive_order
-    |> PrimitiveOrder.changeset(attrs)
+  def update_house_info_after_order(attrs) do
+    house = Repo.get(House,attrs["house_id"])
+    number_shares = house.number_shares - attrs["number_share"]
+    House.changeset(house ,%{number_shares: number_shares})
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a primitive_order.
 
-  ## Examples
-
-      iex> delete_primitive_order(primitive_order)
-      {:ok, %PrimitiveOrder{}}
-
-      iex> delete_primitive_order(primitive_order)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_primitive_order(%PrimitiveOrder{} = primitive_order) do
+    house = Repo.get(House,primitive_order.house_id)
+    number_shares = house.number_shares + primitive_order.number_share
+    House.changeset(house ,%{number_shares: number_shares})
+    |> Repo.update()
     Repo.delete(primitive_order)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking primitive_order changes.
 
-  ## Examples
-
-      iex> change_primitive_order(primitive_order)
-      %Ecto.Changeset{data: %PrimitiveOrder{}}
-
-  """
   def change_primitive_order(%PrimitiveOrder{} = primitive_order, attrs \\ %{}) do
     PrimitiveOrder.changeset(primitive_order, attrs)
   end

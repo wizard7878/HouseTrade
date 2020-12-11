@@ -8,9 +8,14 @@ defmodule Trade.UserAccount do
     changeset = Credential.changeset(%Credential{} , params)
     |> Ecto.Changeset.cast_assoc(:user , with: &User.changeset/2)
     |> IO.inspect()
-    with {:ok,user}          <- Repo.insert(changeset) ,
-         {:ok,token,_claims} <- Guardian.encode_and_sign(user)  do
-      token
+
+    case Repo.insert(changeset) do
+      {:ok , user} ->
+        with  {:ok,token,_claims} <- Guardian.encode_and_sign(user) do
+          token
+        end
+      {:error,_resaon} ->
+        "Email was registered before!"
     end
   end
 

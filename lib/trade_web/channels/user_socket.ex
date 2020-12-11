@@ -2,7 +2,7 @@ defmodule TradeWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", TradeWeb.RoomChannel
+  channel "room:*", TradeWeb.RoomChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -16,7 +16,13 @@ defmodule TradeWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   @impl true
-  def connect(_params, socket, _connect_info) do
+  def connect(%{"token" => token} = params, socket, _connect_info) do
+   case Phoenix.Token.verify(socket,"key",token) do
+    {:ok,user_id} ->
+      {:ok,assign(socket,:user_id,user_id)}
+    {:error,_error} ->
+      :error
+   end
     {:ok, socket}
   end
 

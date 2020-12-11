@@ -8,7 +8,7 @@ defmodule Trade.PrimitiveShop.House do
     field :number_shares, :integer
     field :ordered_shares, :integer
     has_many :porders , Trade.PrimitiveShop.PrimitiveOrder
-    
+    has_many :sorder , Trade.SecondaryShop.SecondaryOrder
     timestamps()
   end
 

@@ -7,6 +7,7 @@ defmodule TradeWeb.HouseController do
   action_fallback TradeWeb.FallbackController
 
   def index(conn, _params) do
+    # IO.inspect(conn.private)
     houses = PrimitiveShop.list_houses()
     render(conn, "index.json", houses: houses)
   end

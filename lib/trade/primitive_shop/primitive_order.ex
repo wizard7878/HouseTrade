@@ -1,14 +1,14 @@
 defmodule Trade.PrimitiveShop.PrimitiveOrder do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Trade.UserAccount.User
+  alias Trade.UserAccount.Credential
   alias Trade.PrimitiveShop.House
-  
+
   schema "porders" do
     field :number_share, :integer
     field :type_order, :string
-    belongs_to :user_id, User
-    belongs_to :house_id, House
+    belongs_to :credential, Credential
+    belongs_to :house, House
 
     timestamps()
   end

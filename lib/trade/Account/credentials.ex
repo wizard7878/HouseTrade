@@ -8,7 +8,8 @@ defmodule Trade.UserAccount.Credential do
     field :hash_password, :string
     field :password , :string , virtual: true
     belongs_to :user, User
-
+    has_many :porders , Trade.PrimitiveShop.PrimitiveOrder
+    has_many :sorder , Trade.SecondaryShop.SecondaryOrder
     timestamps()
   end
 
