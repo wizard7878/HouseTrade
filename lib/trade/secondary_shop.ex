@@ -17,7 +17,7 @@ defmodule Trade.SecondaryShop do
 
   def get_secondary_order!(id) do
     SecondaryOrder
-    |> Repo.get!(id)
+    |> Repo.get(id)
     |> Repo.preload(credential: :user)
     |> Repo.preload(:house)
   end

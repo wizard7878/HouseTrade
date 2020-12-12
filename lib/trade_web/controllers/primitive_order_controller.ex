@@ -30,16 +30,12 @@ defmodule TradeWeb.PrimitiveOrderController do
 
   def show(conn, %{"id" => id}) do
     primitive_order = PrimitiveShop.get_primitive_order!(id)
+    if primitive_order == nil do
+      render(conn , "error.json" , error: "404 Not Found!" )
+    end
     render(conn, "show.json", primitive_order: primitive_order)
   end
 
-  # def update(conn, %{"id" => id, "primitive_order" => primitive_order_params}) do
-  #   primitive_order = PrimitiveShop.get_primitive_order!(id)
-
-  #   with {:ok, %PrimitiveOrder{} = primitive_order} <- PrimitiveShop.update_primitive_order(primitive_order, primitive_order_params) do
-  #     render(conn, "show.json", primitive_order: primitive_order)
-  #   end
-  # end
 
   def delete(conn, %{"id" => id}) do
     primitive_order = PrimitiveShop.get_primitive_order!(id)

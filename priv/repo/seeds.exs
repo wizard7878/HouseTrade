@@ -22,6 +22,7 @@ Trade.Repo.insert!(%Trade.PrimitiveShop.House{name: "12 United Road" , address: 
 Trade.UserAccount.createuser(%{	"email" => "joe@gmail.com","password" => "123","user" => %{"fname" => "Joe","lname" => "Smith"}})
 Trade.UserAccount.createuser(%{	"email" => "Rolf@gmail.com","password" => "456","user" => %{"fname" => "Rolf","lname" => "Anderson"}})
 
+###### Primitive ORDERS ################
 
 h = Trade.Repo.get_by!(Trade.PrimitiveShop.House,name: "45 Drivewood Circle")
 user = Trade.Repo.get_by!(Trade.UserAccount.Credential , email: "joe@gmail.com")
@@ -33,3 +34,19 @@ h = Trade.Repo.get_by!(Trade.PrimitiveShop.House,name: "12 United Road")
 user = Trade.Repo.get_by!(Trade.UserAccount.Credential , email: "Rolf@gmail.com")
 Trade.PrimitiveShop.create_primitive_order(%{"number_share" => 1000 , "type_order" => "Buy" , "house_id" => h.id } , user)
 Trade.PrimitiveShop.update_house_info_after_order(%{"number_share" => 1000 , "type_order" => "Buy" , "house_id" => h.id })
+
+
+###### Secoundary ORDERS ################
+
+h = Trade.Repo.get_by!(Trade.PrimitiveShop.House,name: "45 Drivewood Circle")
+user = Trade.Repo.get_by!(Trade.UserAccount.Credential , email: "joe@gmail.com")
+Trade.SecondaryShop.create_secondary_order(%{"number_share" => 850 , "type_order" => "Buy" , "house_id" => h.id } , user)
+
+h = Trade.Repo.get_by!(Trade.PrimitiveShop.House,name: "18 Jefferson Lane")
+user = Trade.Repo.get_by!(Trade.UserAccount.Credential , email: "Rolf@gmail.com")
+Trade.SecondaryShop.create_secondary_order(%{"number_share" => 1500 , "type_order" => "Sell" , "house_id" => h.id } , user)
+
+
+h = Trade.Repo.get_by!(Trade.PrimitiveShop.House,name: "12 United Road")
+user = Trade.Repo.get_by!(Trade.UserAccount.Credential , email: "joe@gmail.com")
+Trade.SecondaryShop.create_secondary_order(%{"number_share" => 700 , "type_order" => "Sell" , "house_id" => h.id } , user)

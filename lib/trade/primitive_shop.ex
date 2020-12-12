@@ -1,5 +1,5 @@
 defmodule Trade.PrimitiveShop do
-  
+
   import Ecto.Query, warn: false
   alias Trade.Repo
 
@@ -50,7 +50,7 @@ defmodule Trade.PrimitiveShop do
 
   def get_primitive_order!(id) do
     PrimitiveOrder
-    |> Repo.get!(id)
+    |> Repo.get(id)
     |> Repo.preload(credential: :user)
     |> Repo.preload(:house)
 
@@ -75,7 +75,8 @@ defmodule Trade.PrimitiveShop do
   def update_house_info_after_order(attrs) do
     house = Repo.get(House,attrs["house_id"])
     number_shares = house.number_shares - attrs["number_share"]
-    House.changeset(house ,%{number_shares: number_shares})
+    ordered_shares = house.ordered_shares + attrs["number_share"]
+    House.changeset(house ,%{number_shares: number_shares , ordered_shares: ordered_shares})
     |> Repo.update()
   end
 
@@ -83,7 +84,8 @@ defmodule Trade.PrimitiveShop do
   def delete_primitive_order(%PrimitiveOrder{} = primitive_order) do
     house = Repo.get(House,primitive_order.house_id)
     number_shares = house.number_shares + primitive_order.number_share
-    House.changeset(house ,%{number_shares: number_shares})
+    ordered_shares = house.ordered_shares - primitive_order.number_share
+    House.changeset(house ,%{number_shares: number_shares , ordered_shares: ordered_shares})
     |> Repo.update()
     Repo.delete(primitive_order)
   end

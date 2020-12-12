@@ -18,7 +18,7 @@ defmodule TradeWeb.SecondaryOrderController do
         secondary_order = secondary_order
         |> Repo.preload(credential: :user)
         |> Repo.preload(:house)
-        
+
         conn
         |> put_status(:created)
         |> put_resp_header("location", Routes.secondary_order_path(conn, :show, secondary_order))
@@ -30,7 +30,10 @@ defmodule TradeWeb.SecondaryOrderController do
 
   def show(conn, %{"id" => id}) do
     secondary_order = SecondaryShop.get_secondary_order!(id)
-    render(conn, "show.json", secondary_order: secondary_order)
+    if secondary_order == nil do
+      render(conn, "show.json", secondary_order: secondary_order)
+    end
+    render(conn, "error.json", error: "404 Notfound!")
   end
 
   def update(conn, %{"id" => id, "secondary_order" => secondary_order_params}) do
